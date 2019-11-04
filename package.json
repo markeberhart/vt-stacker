@@ -2,7 +2,7 @@
     "name": "vt-stacker",
     "version": "0.0.1",
     "description": "A tool for creating vector tiles from multiple sources such as shapefiles, geojson, and remote vector tile services.",
-    "homepage": "http://locationofgitrepo/README.md",
+    "homepage": "https://github.com/markeberhart/vt-stacker/blob/master/README.md",
     "main": "./index.js",
     "scripts": {},
     "files": [
@@ -15,16 +15,16 @@
     "license": "MIT",
     "preferGlobal": true,
     "bin": {
-        "vtstacker": "./bin/vt-stacker"
+        "vtstacker": "./bin/vtstacker"
     },
     "dependencies": {
         "args": "^5.0.1",
-        "geojson-vt": "http://locationofgeojsoinvt/geojson-vt/geojson-vt-3.2.1.tgz",
+        "geojson-vt": "https://github.com/mapbox/geojson-vt.git",
         "mapshaper": "0.4.125",
         "open": "^6.4.0",
         "serve-static": "~1.14.1",
         "finalhandler": "~1.1.2",
         "shelljs": "^0.8.3",
-        "vt-pbf": "http://locationofvt-pbf/vt-pbf/vt-pbf-3.1.1.tgz"
+        "vt-pbf": "https://github.com/mapbox/vt-pbf.git"
     }
 }
