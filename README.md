@@ -37,7 +37,7 @@ Ensure you have run `npm install`
 
 In the command line, enter the following:
 
-npm install -g git+ssh://git@sc.appdev.proj.coe.ic.gov:ic-frontend/vtstacker.git
+npm install -g git+ssh://git@
 
 --link --global-style
 
@@ -82,30 +82,7 @@ Below is an example of options. You can find this example in two places:
         "output-pbf-files": "./examples/www/tiles/"
     },
     "sources": {
-        "boundaries": {
-            "sourceFileType": "shapefile",
-            "url": "./examples/shapefiles/THREE_M_AD_NATNL_LV_line.shp",
-            "geom": "line",
-            "quality": "90%"
-        },
-        "countries": {
-            "sourceFileType": "shapefile",
-            "url": "./examples/shapefiles/AD_NATNL_AV_polygon.shp",
-            "geom": "polygon",
-            "quality": "90%"
-        },
-        "rivers-line": {
-            "sourceFileType": "shapefile",
-            "url": "./examples/shapefiles/THREE_M_HD_RIVER_MAJ_LV_line.shp",
-            "geom": "line",
-            "quality": "60%"
-        },
-        "country-labels": {
-            "sourceFileType": "shapefile",
-            "url": "./examples/shapefiles/shp_country_labels.shp",
-            "geom": "point",
-            "quality": "100%"
-        }
+
     }
 }
 ````
