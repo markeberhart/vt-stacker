@@ -1,0 +1,1237 @@
+README.md
+
+# MapStacker
+
+### This application will build PBF files from unprojected (WGS84) shapefiles.
+
+---
+
+## Creating a MapStack
+
+
+rgs
+        .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
+        .option('devserver', 'To be followed by the url to a directory you wish to server via HTTP. The default port is 8500.  Additionally, you can define the directory in your options JSON. If the options JSON property `run-http-dev` is set to false, then the server will not run.')
+        .option('examples', 'To be followed by the url to a directory you wish to have MapStacker example files copied to.')
+        .option('buildmap', 'Include this argument to build a series of map vector tiles based on your chosen options.');
+
+    args.examples([
+        {
+            usage:'mapstacker -o ./examples/example-options.json -b -d',
+            description:'Will create a new series of map tiles according to the instructions provided in the JSON. The `-b` command tells MapStacker to build the map and the `-d` command says to launch (or try to launch) a development browser preview.'
+        },
+        {
+            usage:'mapstacker -d ./examples/www',
+            description:'The `-d` command instructs MapStacker to preview the provided url in the default web browser. The default port is '+ devServerObj.port +'. In this example, you would visit the site by going to http://localhost:'+ devServerObj.port +'/'
+        },
+        {
+            usage:'mapstacker -e ./examples',
+            description:'The `-e` command instructs MapStacker to place a copy of the MapStacker example files to the provided directory. If no directory is provided, a new one will be created to copy the exmaple files to called `mapstacker-examples`'
+        }
+
+
+Open your GitBash (or other command line interpreter) and navigate to the root of your project where you included mapstacker as a requirement.
+
+Ensure you have run `npm install`
+
+In the command line, enter the following:
+
+npm install -g git+ssh://git@sc.appdev.proj.coe.ic.gov:ic-frontend/mapstacker.git
+
+--link --global-style
+
+`mapstacker -o default -b` OR `mapstacker --options default --buildmap`
+
+If you wish to point to your own external option file (see formatting below), you can enter it as follows (let's assume your file is in .working/maps/style.json):
+
+`mapstacker -o ./examples/options-example-simple.json -b` OR `mapstacker --options .working/maps/style.json --buildmap`
+
+mapstacker -o ./examples/options-example-simple.json -b
+
+---
+
+## Defining your options
+
+Below is an example of options. You can find this example in two places:
+1. Inside the `package.json` file as `mapstacker-options`
+2. As a separate JSON file here: `./examples/example-options.json`
+
+---
+````
+{
+    "minzoom":0,
+    "maxzoom":6,
+    "bbox":{
+        "north":50,
+        "east":50,
+        "south":-10,
+        "west":-30
+    },
+    "http-dev-server": {
+        "http-dev-port": 8300,
+        "run-http-dev": "true",
+        "http-dev-dir": "./examples/www"
+    },
+    "example-files":{
+        "duplicate-example-files":"true",
+        "example-files-destination-dir":"./mapstacker-examples"
+    },
+    "folder-options": {
+        "output-temp-files": "./examples/www/temp-files/",
+        "output-pbf-files": "./examples/www/tiles/"
+    },
+    "sources": {
+        "boundaries": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/THREE_M_AD_NATNL_LV_line.shp",
+            "geom": "line",
+            "quality": "90%"
+        },
+        "countries": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/AD_NATNL_AV_polygon.shp",
+            "geom": "polygon",
+            "quality": "90%"
+        },
+        "rivers-line": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/THREE_M_HD_RIVER_MAJ_LV_line.shp",
+            "geom": "line",
+            "quality": "60%"
+        },
+        "country-labels": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/shp_country_labels.shp",
+            "geom": "point",
+            "quality": "100%"
+        }
+    }
+}
+````
+---
+
+`minzoom` represents the minimum zoom you wish to have in your map. In other words, what's the highest-up zoom level you plan to use? 0 is a view from space and 12 is street-level detail.
+
+`minzoom` represents the maximum zoom you wish to have in your map. In other words, what's the lowest-to-the-ground zoom level you plan to use? 0 is a view from space and 12 is street-level detail.
+
+`bbox` represents the bounding box to be used to cut-out your shapefiles. Your map will not include any data that is outside this bounding box.
+
+`http-dev-server` is an object with some options for previewing your data in a pre-built html map
+
+> `run-http-dev` is a boolean (true/false) that tells mapstacker whether to launch a web preview of your map data when it has finished compiling.
+
+> `http-dev-dir` is the directory to serve to http://localhost:8000/index.html. You will want to have an `index.html` file here as well as all neccessary files. An example site (default) can be found here: `./examples/www`.
+
+`folder-options` is an object to define the directory locations where mapstacker should save the PBF vector tiles.
+
+> `output-temp-files` is where mapstacker will save any temporary geojson files it has to create when building your vector tile files.
+
+> `output-pbf-files` is where mapstacker will save all of your vector tile files by zoom/y/x location.
+
+`sources` is an object with unlimited objects that define the source shapefiles to be used.
+
+> A source entry will have 5 mandatory entries:
+>  1. name. The object will have a name without spaces or special characters. This name (eg. 'country-layers'), will be referenced later when applying colors and styles.
+>  2. `sourceFileType` is the type of file being use. Currently the only supported source format is <i>shapefile</i>.
+>  3. `url` is the relative link to the source file, for example: <i>./examples/shapefiles/shp_country_labels.shp</i>
+>  4. `geom` tells mapstacker what type of geometry the shapefile is. The three supported types are <i>point, line, and polygon</i>.
+>  5. `quality` denotes what amount of detail you want to see in the map. You can choose any value from `0%` to `100%`. The lower the percent, the lower the quality of that layer in the map. <i>This only works with line and polygon sources</i>.
+
+---
+
+
+PACKAGE.json
+
+{
+    "name": "mapstacker",
+    "version": "0.0.1",
+    "description": "A tool for creating vector tiles from multiple sources such as shapefiles, geojson, and remote vector tile services.",
+    "homepage": "http://locationofgitrepo/README.md",
+    "main": "./index.js",
+    "scripts": {},
+    "files": [
+        "bin",
+        "cmds",
+        "examples",
+        "index.js"
+    ],
+    "author": "Mark C. Eberhart",
+    "license": "MIT",
+    "preferGlobal": true,
+    "bin": {
+        "mapstacker": "./bin/mapstacker"
+    },
+    "dependencies": {
+        "args": "^5.0.1",
+        "geojson-vt": "http://locationofgeojsoinvt/geojson-vt/geojson-vt-3.2.1.tgz",
+        "mapshaper": "0.4.125",
+        "open": "^6.4.0",
+        "serve-static": "~1.14.1",
+        "finalhandler": "~1.1.2",
+        "shelljs": "^0.8.3",
+        "vt-pbf": "http://locationofvt-pbf/vt-pbf/vt-pbf-3.1.1.tgz"
+    }
+}
+INDEX.js
+
+module.exports = () => {
+
+    const path          = require('path');
+    const fs            = require('fs');
+    const mapshaper     = require('mapshaper');
+    const shell         = require('shelljs');
+    const pkgjson       = require('./package.json');
+    const geojsonvt     = require('geojson-vt');
+    const args          = require('args');
+    const vtpbf         = require('vt-pbf');
+    const open          = require('open');
+
+    let isglobal      = false;
+
+    const [,, ...msArgs] = process.argv
+    let argsSent = false;
+    if(msArgs.length>0) {
+        argsSent = true;
+    }
+
+    // Object for passed arguments
+    let mapstackerOptions = {created:false};
+
+    // Object to track requirements for development http server preview
+    let devServerObj = {
+        fromSystem:true,
+        port: 8500,
+        dir: null
+    }
+
+    // Parameters for examples requests
+    let examplesObj = {
+        doCopyFiles:false,
+        fromSystem: true,
+        remdir: 'examples',
+        dir: './mapstacker-examples'
+    }
+
+
+    // Help file oparameters
+    args
+        .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
+        .option('devserver', 'To be followed by the url to a directory you wish to server via HTTP. The default port is 8500.  Additionally, you can define the directory in your options JSON. If the options JSON property `run-http-dev` is set to false, then the server will not run.')
+        .option('examples', 'To be followed by the url to a directory you wish to have MapStacker example files copied to.')
+        .option('buildmap', 'Include this argument to build a series of map vector tiles based on your chosen options.');
+
+    // Help file example snippets
+    args.examples([
+        {
+            usage:'mapstacker -o ./examples/example-options.json -b -d',
+            description:'Will create a new series of map tiles according to the instructions provided in the JSON. The `-b` command tells MapStacker to build the map and the `-d` command says to launch (or try to launch) a development browser preview.'
+        },
+        {
+            usage:'mapstacker -d ./examples/www',
+            description:'The `-d` command instructs MapStacker to preview the provided url in the default web browser. The default port is '+ devServerObj.port +'. In this example, you would visit the site by going to http://localhost:'+ devServerObj.port +'/'
+        },
+        {
+            usage:'mapstacker -e ./examples',
+            description:'The `-e` command instructs MapStacker to place a copy of the MapStacker example files to the provided directory. If no directory is provided, a new one will be created to copy the exmaple files to called `mapstacker-examples`'
+        }
+    ]);
+
+    // Container to hold passed command line parameters
+    const flags = args.parse(process.argv);
+
+
+    // Create array of directories from string
+    const getFoldersArray = (folder) => {
+        const patharr = folder.split('/').filter(function(d,i,e) {
+            return ((d!='') && (d!='.'));
+        });
+        return patharr;
+    }
+
+    // Delete a directory and all sub-directories in it
+    const deleteFolderRecursive = function(path) {
+        if (fs.existsSync(path)) {
+          fs.readdirSync(path).forEach(function(file, index){
+            var curPath = path + "/" + file;
+            if (fs.lstatSync(curPath).isDirectory()) { // recurse TODO todo to do 9/23/2019 - fix issue when running script from command line inside a project
+              deleteFolderRecursive(curPath);
+            } else { // delete file
+              fs.unlinkSync(curPath);
+            }
+          });
+          fs.rmdirSync(path);
+        }
+    };
+
+    // Check multiple folders
+    const checkOrCreateFolders = (options) => {
+        for(var f in options['folder-options']) {
+            console.log("\n Creating (or re-creating) the following directory:", options['folder-options'][f]);
+            checkOrCreateFolder(options['folder-options'][f]);
+        }
+        return true;
+    }
+
+    // Create folders if they don't exist
+    const checkOrCreateFolder = (folder) => {
+        const patharr = getFoldersArray(folder);
+        let cpath='';
+        for(let f=0; f<patharr.length; f++) {
+            if(patharr[f]=='..'){
+                cpath = cpath + patharr[f] + '/' + patharr[f+1] + '/';
+                f++;
+            }else{
+                cpath = cpath + patharr[f] + '/';
+            }
+            // If directory does not exist, create it
+            if(!fs.existsSync(cpath)){
+                fs.mkdirSync(cpath);
+            }
+        }
+    }
+
+
+    // get bounding box that is in West, South, East, North order
+    const getBBoxWSEN = () => {
+        let str = mapstackerOptions.bbox.west+','+mapstackerOptions.bbox.south+','+mapstackerOptions.bbox.east+','+mapstackerOptions.bbox.north;
+        let arr = [Number(mapstackerOptions.bbox.west), Number(mapstackerOptions.bbox.south), Number(mapstackerOptions.bbox.east), Number(mapstackerOptions.bbox.north)]
+        let obj = {
+            str: str,
+            arr: arr
+        }
+        return obj;
+    }
+
+    // get bounding box in South, West, North, East order
+    const getBBoxSWNE = () => {
+        let str = mapstackerOptions.bbox.south+','+mapstackerOptions.bbox.west+','+mapstackerOptions.bbox.north+','+mapstackerOptions.bbox.east;
+        let arr = [Number(mapstackerOptions.bbox.south), Number(mapstackerOptions.bbox.west), Number(mapstackerOptions.bbox.north), Number(mapstackerOptions.bbox.east)]
+        let obj = {
+            str: str,
+            arr: arr
+        }
+        return obj;
+    }
+
+    // Create source urls array for temp files to be made
+    const getSources = () => {
+        let cnt = 0;
+        for(let s in mapstackerOptions.sources){
+            if(mapstackerOptions.sources[s].sourceFileType){
+                if(mapstackerOptions.sources[s].sourceFileType=="geojson" || mapstackerOptions.sources[s].sourceFileType=="shapefile"){
+                    cnt++;
+                    mapstackerOptions.sources[s].id = s;
+                    mapstackerOptions.sources[s].uid = cnt;
+                    mapstackerOptions.sources[s]['temp'] = mapstackerOptions['folder-options']['output-temp-files'] + s + ".geojson";
+                    mapstackerOptions.sources[s].bbox = getBBoxWSEN().str;
+                }
+            }
+        }
+        mapstackerOptions['numSources'] = cnt;
+        for(let sr in mapstackerOptions.sources){
+            mapstackerOptions.sources[sr]['numSources'] = cnt;
+        }
+        mapstackerOptions.sources = createTempGeojsonFileCommands(mapstackerOptions.sources);
+        return mapstackerOptions.sources;
+    }
+
+    // Create commands for mapshaper to build temporary geojson files
+    const createTempGeojsonFileCommands = (sources) => {
+        for(let s in sources) {
+            if(!fs.existsSync(sources[s].url)) {
+                console.log("Could not find:", sources[s].url);
+                //sources[s].url = './node_modules/mapstacker/'+sources[s].url;
+                isglobal = true;
+                //console.log("PROCESS:", process.argv0);
+                let urlArr = sources[s].url.split('/');
+                let newUrl1 = urlArr.join('\\');
+                    newUrl1 = newUrl1.replace('.\\','node_modules\\mapstacker\\');
+                let newUrl2 = process.argv0.replace('node.exe',newUrl1);
+
+                sources[s].url = newUrl2;
+                console.log("Trying this instead!", sources[s].url);
+            }
+            let _cmd = null;
+            if(sources[s].geom=="point"){
+                _cmd = "-i "+sources[s].url+" -proj +proj=longlat +datum=WGS84 +no_defs -clip bbox="+sources[s].bbox+" -rename-layers "+sources[s].id+" -o "+sources[s].temp+" format=geojson";
+            }else{
+                _cmd = "-i "+sources[s].url+" -proj +proj=longlat +datum=WGS84 +no_defs -simplify dp "+sources[s].quality+" -clip bbox="+sources[s].bbox+" -rename-layers "+sources[s].id+" -o "+sources[s].temp+" format=geojson";
+            }
+            sources[s]['createGeojsonCmd'] = _cmd;
+        }
+        return sources;
+    }
+
+    const checkForFileExistance = (url) => {
+        return fs.existsSync(path.resolve(url));
+    }
+
+    const tempJsonCallbackFailure = (error) => {
+        console.log("tempJsonCallbackFailure:", error);
+    }
+
+    // Execute commands to create temporary geojson files
+    const buildTempJsons = (sources) => {
+        let lcnt = 0;
+        console.log("Standby while I build new map tiles. This could take a few minutes...");
+        for(let s in sources) {
+            if(sources[s]['createGeojsonCmd'] != null && sources[s]['createGeojsonCmd'] != ""){
+                //console.log("Working on GEOJSON for:", s);
+                mapshaper.runCommands(sources[s]['createGeojsonCmd']).then(function(resolve, reject){
+                    sources[s]['tempFileCreated'] = checkForFileExistance(sources[s].temp);
+                    lcnt++;
+                    //console.log(sources[s]['uid'], sources[s]['numSources'], lcnt);
+                    if(lcnt==sources[s]['numSources']){
+                        console.log("Now check for temp files in directory.");
+                        checkForTempFiles(sources);
+                    }
+                     if(reject){
+                         console.log("REJECTED!!", s);
+                     }
+                });
+            }
+        }
+    }
+
+    // Build Mapbox Vector Tile indexes
+    const buildTempMVTs = (sources) => {
+        //console.log("SOURCES TO BUILD MVT:", sources);
+        for(let s in sources) {
+            if(sources[s]['createGeojsonCmd'] != null && sources[s]['createGeojsonCmd'] != ""){
+                sources[s]['mvt'] = geojsonvt(JSON.parse(fs.readFileSync(sources[s].temp, "utf8")));
+            }
+        }
+        return sources;
+    }
+
+    // Create options object for vtpbf library
+    const buildPBFmapstackerOptions = (sources) => {
+        let layers = {};
+        for(let s in sources) {
+            layers[s] = sources[s]['mvt'];
+        }
+        let opts = {
+            layers: layers,
+            rootDir: mapstackerOptions['folder-options']['output-pbf-files'],
+            bbox: getBBoxSWNE().arr,
+            zoom: {
+                min: Number(mapstackerOptions.minzoom),
+                max: Number(mapstackerOptions.maxzoom)
+            }
+        }
+        mapstackerOptions['pbf-mapstackerOptions'] = opts;
+        return opts;
+    }
+
+    // Helper function to get individual PBF tile
+    const getTile = (z, x, y, options) => {
+        console.log("options:", options);
+        var pbfOptions = {};
+        var hasTiles = false;
+        for(var lay in options.layers) {
+            var tile = options.layers[lay].getTile(z, x, y);
+            if (tile != null) {
+                hasTiles = true;
+                pbfOptions[lay] = tile;
+            }
+        }
+        if(hasTiles) {
+            var pbf = vtpbf.fromGeojsonVt(pbfOptions, {version: 2});
+            //console.log("PBF:", pbf);
+            //console.log("pbfOptions:", pbfOptions);
+            return pbf;
+        }
+        return null;
+    };
+
+    // Series of helper functions
+    const helpers = {
+        //given a bounding box and zoom level, calculate x and y tile ranges
+        getTileBounds(bbox, zoom) {
+            var tileBounds = {
+              xMin: this.long2tile(bbox[1], zoom),
+              xMax: this.long2tile(bbox[3], zoom),
+              yMin: this.lat2tile(bbox[2], zoom),
+              yMax: this.lat2tile(bbox[0], zoom),
+            };
+            return tileBounds;
+        },
+
+        //lookup tile name based on lat/lon, courtesy of http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Lon..2Flat._to_tile_numbers
+        long2tile(lon,zoom) {
+          return (Math.floor((lon+180)/360*Math.pow(2,zoom)));
+        },
+
+        lat2tile(lat,zoom) {
+          return (Math.floor((1-Math.log(Math.tan(lat*Math.PI/180) + 1/Math.cos(lat*Math.PI/180))/Math.PI)/2 *Math.pow(2,zoom)));
+        },
+    };
+
+    // Create PBF directories and files by z/x/y
+    const buildPBFTiles = (options) => {
+        //console.log("PBF OPTIONS: ", options);
+        let tileCount = 0, tileCoords = {}, tileBounds;
+
+        let root = `${options.rootDir}`;
+        if(fs.existsSync(root)){
+            console.log("Root directory exists:", root);
+            deleteFolderRecursive(root);
+            fs.mkdirSync(root);
+        }
+
+        for(let z=options.zoom.min; z<=options.zoom.max; z++) {
+            console.log("Zoom:", z);
+
+            if(z==options.zoom.max){
+                console.log("FINISHED");
+                checkHttpDevServer();
+            }
+
+            let zPath = `${options.rootDir}/${z.toString()}/`;
+            if(!fs.existsSync(zPath)){
+                fs.mkdirSync(zPath);
+            }
+
+            tileBounds = helpers.getTileBounds(options.bbox, z);
+
+            // x loop
+            for(let x=tileBounds.xMin; x<=tileBounds.xMax; x++) {
+                // create x directory in the z directory
+                let xPath = zPath + x.toString();
+                if(!fs.existsSync(xPath)){
+                    fs.mkdirSync(xPath);
+                }
+
+                // y loop
+                for(let y=tileBounds.yMin; y<=tileBounds.yMax; y++) {
+
+                    //console.log(`Getting tile ${z} ${x} ${y} `)
+                    let mvt = getTile(z, x, y, options);
+
+                    // TODO what should be written to the tile if there is no data?
+                    let output = mvt !== null ? mvt : '';
+                    console.log("OUTPUT:", output);
+                    fs.writeFileSync(`${xPath}/${y}.pbf`, output);
+                    tileCount++;
+                }
+
+            }
+        }
+
+    }
+
+    // Was "buildmap" parameter passed?
+    const shouldBuildMap = () => {
+        let buildmap = false;
+        if(flags['buildmap']){
+            buildmap = true;
+        }
+        return buildmap;
+    }
+
+    // Was "devserver" parameter passed?
+    const canStartDevServer = () => {
+        let runServer = false;
+        if(flags['devserver'] && typeof flags['devserver']=='string'){
+            devServerObj.dir = flags['devserver'];
+            runServer = true;
+        }
+        return runServer;
+    }
+
+    // Decide whether to use options in command line parameter or options JSON
+    const checkForExamplesRequest = () => {
+        let cliDir = null;
+        // Was a durectory url passed with "examples" command via CLI?
+        if(flags['examples'] && typeof flags['examples']=='string'){
+            cliDir = flags['examples'];
+            examplesObj.dir = flags['examples'];
+            examplesObj.doCopyFiles = true;
+        }
+
+        if(flags['examples'] && typeof flags['examples']=='boolean'){
+            examplesObj.doCopyFiles =flags['examples'];
+        }
+
+        // If options JSON file provided, try to use its examples settings
+        if(mapstackerOptions['example-files']
+            && mapstackerOptions['example-files']['duplicate-example-files']
+            && mapstackerOptions['example-files']['example-files-destination-dir']
+        ){
+            if(cliDir){
+                mapstackerOptions['example-files']['example-files-destination-dir'] = cliDir;
+            }
+
+            flags['examples'] = mapstackerOptions['example-files']['example-files-destination-dir'];
+            flags['e'] = flags['examples'];
+
+            examplesObj.doCopyFiles = mapstackerOptions['example-files']['duplicate-example-files'];
+            examplesObj.fromSystem = false;
+            examplesObj.dir = mapstackerOptions['example-files']['example-files-destination-dir'];
+        }
+
+        return examplesObj.doCopyFiles;
+    }
+
+    // Copy example files from mapstacker/examples module directory to user local directory
+    const copyOverExampleFiles = () => {
+        let remDirectory = process.argv0.replace('node.exe','node_modules\\mapstacker\\'+examplesObj.remdir+'\\');
+        let locDirectory = path.resolve(examplesObj.dir);
+        checkOrCreateFolder(locDirectory);
+        console.log(" Copying MapStacker example files from "+remDirectory+" to "+locDirectory+".");
+        copyFolderRecursiveSync(remDirectory, locDirectory);
+    }
+
+
+    // Parse options JSON
+    const getMapstackerOptions = () => {
+        if(!mapstackerOptions.created && hasOptions()) {
+            console.log("\n Mapstacker now trying to pull options from this JSON file:", flags['options']);
+            console.log("\n -----------------------------------------------------");
+            let options = flags['options'];
+            let jsonFile = flags['options'];
+            if(!fs.existsSync(jsonFile)) {
+                console.log("The JSON options file "+ jsonFile + " that you entered does not appear to exist.");
+                console.log("\n -----------------------------------------------------");
+            } else {
+                filecontents = fs.readFileSync(flags['options']);
+                mapstackerOptions = JSON.parse(filecontents);
+                if(mapstackerOptions['folder-options'] && mapstackerOptions['folder-options']['output-temp-files']) {
+                    mapstackerOptions['sources'] = getSources();
+                }else{
+                    console.log("\n Please double-check your JSON options file to ensure it has a `folder-options` property");
+                    console.log("\n The `folder-options` property should have two sub-properties: `output-temp-files` and `output-pbf-files` which are both url strings pointing to directories for your temp GEOJSON files and PBF tiles for your map.");
+                    console.log("\n -----------------------------------------------------");
+                    mapstackerOptions.created = false;
+                    return mapstackerOptions;
+                }
+                if(mapstackerOptions['http-dev-server']
+                    && mapstackerOptions['http-dev-server']['run-http-dev']
+                    && mapstackerOptions['http-dev-server']['run-http-dev']==='true'
+                    && mapstackerOptions['http-dev-server']['http-dev-dir']
+                    && mapstackerOptions['http-dev-server']['http-dev-port']
+                    ){
+                    if(!canStartDevServer()) {
+                        flags['devserver'] = mapstackerOptions['http-dev-server']['http-dev-dir'];
+                        flags['d'] = flags['devserver'];
+
+                        devServerObj.port = mapstackerOptions['http-dev-server']['http-dev-port'];
+                        devServerObj.dir = mapstackerOptions['http-dev-server']['http-dev-dir'];
+                        devServerObj.fromSystem = false;
+                        console.log("\n Found dev server directory and port in your options file. Port: " + devServerObj.port + ", directory: " + devServerObj.dir);
+                    }
+
+                }else{
+                    flags['devserver'] = false;
+                    flags['d'] = false;
+                    console.log("\n HTTP Development server options not found.");
+                    console.log("\n If you wish to utilize MapStacker's http development server preview, please double-check your JSON options file to ensure it has a `http-dev-server` property");
+                    console.log("\n The `http-dev-server` property should have three sub-properties: `http-dev-port` (a 4-digit integer like 8888), `run-http-dev` (boolean of true of false) and `http-dev-dir` (a url string pointing to directory to display in browser at http://localhost:8888, or whatever port number you used).");
+                    console.log("\n -----------------------------------------------------");
+                }
+                mapstackerOptions.created = true;
+            }
+        }
+        return mapstackerOptions;
+    }
+
+    const hasOptions = () => {
+        let hasOptions = false;
+        if(flags['options'] && typeof flags['options']=='string'){
+            hasOptions = true;
+        }
+        if(flags['options'] && typeof flags['options']=='boolean'){
+            console.log("P\n lease be sure to include the url of a properly formatted JSON file after -o or --options. Example: -o ./workingfiles/mymapstackerfile.json");
+            console.log("\n -----------------------------------------------------");
+        }
+        return hasOptions;
+    }
+
+    const init = () => {
+
+        let options = getMapstackerOptions();
+
+        if(options.created) {
+            if(shouldBuildMap()){
+                if(checkOrCreateFolders(options)) {
+                    console.log("Build temp files...");
+                    buildTempJsons(options.sources);
+                }
+            }else{
+                console.log("\n Did not include --buildmap or -b argument, so will not build new map tiles.");
+                checkHttpDevServer();
+            }
+        }else{
+            console.log("\n Could not continue with map creation process due to an issue with the options JSON.");
+            checkHttpDevServer();
+        }
+
+        //copyOverExampleFiles
+        if(checkForExamplesRequest()!=false && checkForExamplesRequest()!='false') {
+            copyOverExampleFiles();
+        }
+    }
+
+    const checkForTempFiles = (sources) => {
+        console.log("CHECK FOR TEMP FILES...");
+        let obj= {};
+        for(let src in sources){
+            if(sources[src].tempFileCreated) {
+                obj[src] = sources[src];
+            }
+        }
+        let pbfmapstackerOptions = buildPBFmapstackerOptions( buildTempMVTs(obj) );
+        buildPBFTiles(pbfmapstackerOptions);
+    }
+
+    const launchHttpDevServer = (args) => {
+        let serveStatic     = require('serve-static');
+        let http            = require('http');
+        let finalhandler    = require('finalhandler');
+        let webUrl          = args.dir;
+        let devport         = args.port;
+
+        if(isglobal) {
+            let urlArr      = webUrl.split('/');
+            let newUrl1     = urlArr.join('\\');
+                newUrl1     = newUrl1.replace('.\\','node_modules\\mapstacker\\');
+            let newUrl2     = process.argv0.replace('node.exe',newUrl1);
+                webUrl      = newUrl2;
+        }
+
+        console.log("\n Starting development HTTP server here:", args.dir, " on port: ", args.port);
+
+        console.log("\n Trying to host this:", webUrl);
+        //works: 'd:\\turbine_suite\\node\\node_modules\\mapstacker\\examples\\www'
+
+        let serve = serveStatic(webUrl, {
+            'index': ['index.html']
+        });
+        let server = http.createServer(function onRequest(req, res){
+            serve(req,res, finalhandler(req, res));
+        })
+        server.listen(devport);
+        (async () => {
+            await open('http://localhost:'+devport+'/');
+        })();
+
+        console.log('\n Server running on port '+ devport + ' is up now and pointing to ' + webUrl);
+        console.log('\n Hit "Ctrl + C" to shut-down the dev server preview. (may need to do this multiple times)');
+    }
+
+    const checkHttpDevServer = () => {
+        console.log("\n Looking to see if you requested a development HTTP preview...");
+        if(canStartDevServer()) {
+            if(devServerObj.fromSystem) {
+                console.log("\n Request detected for development HTTP server preview. In other words, you included a --devserver or -d argument");
+            }else{
+                console.log("\n Request detected for development HTTP server preview. In other words, you included parameters in your options JSON file.");
+            }
+
+            launchHttpDevServer(devServerObj);
+        }else{
+            console.log("\n No directory was provided for the development server or `run-http-dev` is set to false in your options JSON file.");
+        }
+    }
+
+    const copyFileSync = (source, target) => {
+
+        var targetFile = target;
+
+        //if target is a directory a new file with the same name will be created
+        if ( fs.existsSync( target ) ) {
+            if ( fs.lstatSync( target ).isDirectory() ) {
+                targetFile = path.join( target, path.basename( source ) );
+            }
+        }
+
+        fs.writeFileSync(targetFile, fs.readFileSync(source));
+    }
+
+    const copyFolderRecursiveSync = (source, target) => {
+        var files = [];
+
+        //check if folder needs to be created or integrated
+        var targetFolder = path.join( target, path.basename( source ) );
+        if ( !fs.existsSync( targetFolder ) ) {
+            fs.mkdirSync( targetFolder );
+        }
+
+        //copy
+        if ( fs.lstatSync( source ).isDirectory() ) {
+            files = fs.readdirSync( source );
+            files.forEach( function ( file ) {
+                var curSource = path.join( source, file );
+                if ( fs.lstatSync( curSource ).isDirectory() ) {
+                    copyFolderRecursiveSync( curSource, targetFolder );
+                } else {
+                    copyFileSync( curSource, targetFolder );
+                }
+            } );
+        }
+    }
+
+
+    console.log("   ******************************************");
+    console.log("   **     Thanks for using MapStacker!     **");
+    console.log("   **            version 0.0.1             **");
+    console.log("   ******************************************");
+
+    if(argsSent) {
+        init();
+    } else {
+        console.log("\n   Hey there! I didn't detect any passed parameters. Below is a quick run-down of what MapStacker can do. \n ");
+        args.showHelp();
+    }
+
+}
+
+bin/mapstacker (no extension)
+
+#!/usr/bin/env node
+require('..')()
+
+
+examples/options-example.json
+
+{
+	"minzoom":0,
+	"maxzoom":2,
+	"bbox":{
+		"north":85,
+		"east":180,
+		"south":-85,
+		"west":-180
+    },
+    "http-dev-server": {
+        "http-dev-port": 8300,
+        "run-http-dev": "true",
+        "http-dev-dir": "./examples/www"
+    },
+    "example-files":{
+        "duplicate-example-files":"false",
+        "example-files-destination-dir":"./mapstacker-example-files"
+    },
+    "folder-options": {
+        "output-temp-files": "./examples/www/temp-files/",
+        "output-pbf-files": "./examples/www/tiles/"
+    },
+    "sources": {
+        "boundaries": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/BOUNDARIES.shp",
+            "geom": "line",
+            "quality": "90%"
+        },
+        "lakes": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/LAKES.shp",
+            "geom": "polygon",
+            "quality": "75%"
+        },
+        "roads-major": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/ROADS.shp",
+            "geom": "line",
+            "quality": "70%"
+        },
+        "country-labels": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/LABELS.shp",
+            "geom": "point",
+            "quality": "100%"
+        }
+    }
+}
+
+examples/www/index.html
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAPSTACKER Preview</title>
+  <link rel="stylesheet" type="text/css" href="./mapbox-gl.css">
+  <link rel="stylesheet" type="text/css" href="./mapbox-gl-inspect.css">
+  <script src="./mapbox-gl.js"></script>
+  <script src="./mapbox-gl-inspect.min.js"></script>
+  <style>
+    body {
+      background: rgb(255, 255, 255);
+      color: #333;
+      font-family: Arial, sans-serif;
+    }
+
+    #header {
+      font-size: 1.9em;
+      font-family: Arial Narrow;
+      text-align: center;
+      color: rgb(255,255,255);
+      top: 0px;
+      width: 100%;
+      position: absolute;
+    }
+
+    #map {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    h1 {
+      position: absolute;
+      top: 5px;
+      right: 0;
+      width: 240px;
+      margin: 0;
+      line-height: 20px;
+      font-size: 20px;
+    }
+
+    #layerList {
+      position: absolute;
+      top: 35px;
+      right: 0;
+      bottom: 0;
+      width: 240px;
+      overflow: auto;
+    }
+
+    #layerList div div {
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">mapstacker (preview)</div>
+  <div id="map" class="mapboxgl-map">
+    <div class="mapboxgl-canvas-container mapboxgl-interactive mapboxgl-touch-drag-pan mapboxgl-touch-zoom-rotate">
+      <canvas class="mapboxgl-canvas" tabindex="0" aria-label="Map" style="position: absolute; width: 1059px; height: 1152px;"
+        width="1059" height="1152"></canvas></div>
+    <div class="mapboxgl-control-container">
+      <div class="mapboxgl-ctrl-top-left"></div>
+      <div class="mapboxgl-ctrl-top-right">
+        <div class="mapboxgl-ctrl mapboxgl-ctrl-group"><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-in" type="button" aria-label="Zoom In"></button><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-out"
+            type="button" aria-label="Zoom Out"></button><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-compass" type="button"
+            aria-label="Reset North"><span class="mapboxgl-ctrl-compass-arrow" style="transform: rotate(0deg);"></span></button></div>
+        <div
+          class="mapboxgl-ctrl mapboxgl-ctrl-group" style="display: none;"><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-map" type="button"></button></div>
+      </div>
+      <div class="mapboxgl-ctrl-bottom-left">
+        <div class="mapboxgl-ctrl"></div>
+      </div>
+      <div class="mapboxgl-ctrl-bottom-right">
+        <div class="mapboxgl-ctrl mapboxgl-ctrl-attrib"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function loadJson(filePath, callback, success, error){
+        //console.log("loadJson filePath:",filePath);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            //console.log("xhr.readyState:",xhr.readyState," - XMLHttpRequest.DONE:",XMLHttpRequest.DONE);
+            if (xhr.readyState === XMLHttpRequest.DONE){
+                //console.log("LOADED!");
+                if(xhr.status === 200){
+                    //console.log("status is 200 - xhr:",xhr);
+                    if(xhr.responseText){
+                        //success(JSON.parse(xhr.responseText));
+
+                        var resp = JSON.parse(xhr.responseText);
+                        //return resp;
+                        callback(resp);
+                    }else{
+                        if(error){
+                            //console.log("ERROR:",error);
+                            //return error;
+                        }
+                    }
+                }
+            }
+        }
+        xhr.open("GET", filePath, true);
+        xhr.send();
+        //console.log("XHR:",xhr);
+    }
+
+    var loc = location.pathname.replace("/index.html", "/");
+    var isHttp = true;
+
+    // If location has mapstacker, it's local and using "file://"
+    // If not, it's using "http://"
+    if(loc.includes('mapstacker')) {
+      isHttp = false;
+    }
+
+    var glyphsUrl, tilesUrl, spriteUrl, urlLoc;
+    if(isHttp) {
+      urlLoc = window.location.origin+"/";
+    } else {
+      urlLoc = "file://"+loc;
+    }
+
+    glyphsUrl   = urlLoc+"fonts/{fontstack}/{range}.pbf";
+    tilesUrl    = urlLoc+"tiles/{z}/{x}/{y}.pbf";
+    spriteUrl   = urlLoc+"sprite/sprite";
+
+    var mapstyle = "./example-style.json";
+    loadJson(mapstyle, buildmap);
+
+    function buildmap(style) {
+      console.log("STYLE:", style);
+      style.sprite = spriteUrl;
+      style.glyphs = glyphsUrl;
+      style.sources.mapdata.tiles = [tilesUrl];
+      var map = new mapboxgl.Map({
+        container: 'map',
+        hash: true,
+        accessToken: false,
+        style: style,
+        minZoom:0,
+        maxZoom:14
+      });
+      map.addControl(new mapboxgl.NavigationControl());
+      var inspect = new MapboxInspect({
+        showInspectMap: true,
+        showInspectButton: false
+      });
+      map.addControl(inspect);
+    }
+
+  </script>
+
+
+</body>
+
+</html>
+
+examples/www/example-style.json
+
+{
+    "version": 8,
+    "sprite": "",
+    "glyphs": "",
+    "sources": {
+        "mapdata": {
+            "type": "vector",
+            "tiles": [],
+            "maxzoom":2,
+            "minzoom":0
+        }
+    },
+    "light":{
+        "anchor":"viewport",
+        "color":"#ffffff",
+        "intensity":0.75
+    },
+    "layers": [
+        {
+          "id": "background",
+          "type": "background",
+          "paint": {
+              "background-color": "rgba(0,0,255,0.3)"
+          }
+        },
+
+        {
+          "id": "countries",
+          "type": "fill",
+          "source": "mapdata",
+          "source-layer": "countries",
+          "minzoom":0,
+          "maxzoom":14,
+          "paint": {
+              "fill-color": "rgba(187,174,124,1)"
+          }
+        },
+
+        {
+          "id": "rivers-line",
+          "type": "line",
+          "source": "mapdata",
+          "source-layer": "rivers-line",
+          "minzoom": 2,
+          "maxzoom": 14,
+          "paint": {
+              "line-color": {
+                "stops": [[2, "rgba(89,157,185,0.3)"], [10, "rgba(89,157,185,0.8)"]]
+              },
+              "line-width": {
+                "base": 1.2,
+                "stops": [[2, 0.5], [5, 1], [8, 2], [10, 3]]
+              }
+          }
+        },
+
+        {
+          "id": "rivers-polygon",
+          "type": "fill",
+          "source": "mapdata",
+          "source-layer": "rivers-polygon",
+          "paint": {
+              "fill-color": {
+                "stops": [[4, "rgba(89,157,185,0.1)"], [10, "rgba(89,157,185,1)"]]
+              }
+          }
+        },
+
+        {
+          "id": "roads-major",
+          "type": "line",
+          "source": "mapdata",
+          "filter": ["==", "fieldname", "road"],
+          "source-layer": "roads-major",
+          "minzoom": 2,
+          "maxzoom": 14,
+          "paint": {
+              "line-gap-width":{
+                "base": 2,
+                "stops": [[6, 0], [9, 2]]
+              },
+              "line-color": {
+                "stops": [[2, "rgba(109,103,87,0)"], [10, "rgba(109,103,87,.9)"]]
+              },
+              "line-width": {
+                "base": 2,
+                "stops": [[2, 0.5], [4, 1], [6, 2], [8, 4]]
+              }
+          }
+        },
+
+        {
+          "id": "roads-major-labels",
+          "type": "symbol",
+          "source": "mapdata",
+          "filter": ["==", "colName", "roadmajor"],
+          "source-layer": "roads-major",
+          "minzoom": 6,
+          "maxzoom": 11,
+          "layout": {
+            "text-size": 10,
+            "symbol-placement":"line",
+            "text-field": "{label}",
+            "text-font": ["Metropolis Regular", "Noto Sans Regular"],
+            "text-max-angle": 30,
+            "text-transform": "uppercase",
+            "visibility": "visible"
+          },
+          "paint": {
+            "text-color": "#000000",
+            "text-halo-color": "#fff",
+            "text-translate": [0, 0],
+            "text-halo-width": 1,
+            "text-halo-blur": 1
+          }
+        },
+
+        {
+          "id": "ferries",
+          "type": "line",
+          "source": "mapdata",
+          "filter": ["==", "colname", "Ferry"],
+          "source-layer": "roads-major",
+          "minzoom": 6,
+          "maxzoom": 13,
+          "paint": {
+              "line-color": "rgba(255,255,255,0.4)",
+              "line-width": 1,
+              "line-dasharray":[3,1]
+          }
+        },
+
+        {
+          "id": "boundaries",
+          "type": "line",
+          "source": "mapdata",
+          "source-layer": "boundaries",
+          "paint": {
+              "line-color": "rgba(0, 0, 0,0.4)",
+              "line-width": 3.5,
+              "line-dasharray":[2,1]
+          }
+        },
+
+        {
+          "id": "capitals-countries",
+          "type": "symbol",
+          "source": "mapdata",
+          "filter": ["==", "colName", "country_capital_name"],
+          "source-layer": "places",
+          "minzoom": 4,
+          "maxzoom": 14,
+          "layout": {
+            "icon-image": "circle_11",
+            "icon-size": 1,
+            "icon-rotate": 0,
+            "icon-padding": 2,
+            "text-justify": "left",
+            "text-anchor":"left",
+            "text-padding": 5,
+            "text-rotate": 0,
+            "text-offset":[0.5,0],
+            "text-size": 11,
+            "text-field": "{city_name}",
+            "text-font": ["Metropolis Regular", "Noto Sans Regular"],
+            "text-max-angle": 30,
+            "text-transform": "uppercase",
+            "visibility": "visible"
+          },
+          "paint": {
+            "text-color": "#000000",
+            "text-halo-color": "#fff",
+            "text-translate": [0, 0],
+            "text-halo-width": 1,
+            "text-halo-blur": 1
+          }
+        },
+
+        {
+          "id": "country-labels",
+          "type": "symbol",
+          "source": "mapdata",
+          "source-layer": "country-labels",
+          "minzoom": 0,
+          "maxzoom": 14,
+          "layout": {
+            "text-size": 14,
+            "text-field": "{col_field_name}",
+            "text-font": ["Metropolis Regular", "Noto Sans Regular"],
+            "text-max-angle": 30,
+            "text-transform": "uppercase",
+            "visibility": "visible"
+          },
+          "paint": {
+            "text-color": "#000000",
+            "text-halo-color": "#fff",
+            "text-translate": [0, 0],
+            "text-halo-width": 1,
+            "text-halo-blur": 1
+          }
+        }
+    ]
+  }
+
+examples/www/sprite
+
+sprite.json
+sprite.png
+
+
+
+examples/www/fonts
+
+FontName1,FontName2
+0-255.pbf
+256-511.pbf…
+(all in between numbers)
+65024-65279.pbf
+ 
