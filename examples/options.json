@@ -1,0 +1,49 @@
+{
+	"minzoom":0,
+	"maxzoom":4,
+	"bbox":{
+		"north":85,
+		"east":180,
+		"south":-85,
+		"west":-180
+    },
+    "http-dev-server": {
+        "http-dev-port": 8300,
+        "run-http-dev": "true",
+        "http-dev-dir": "./examples/www"
+    },
+    "example-files":{
+        "duplicate-example-files":"false",
+        "example-files-destination-dir":"./mapstacker-example-files"
+    },
+    "folder-options": {
+        "output-temp-files": "./examples/www/temp-files/",
+        "output-pbf-files": "./examples/www/tiles/"
+    },
+    "sources": {
+        "countries": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/ne_10m_admin_0_countries_lakes.shp",
+            "geom": "polygon",
+            "quality": "75%"
+        },
+        "boundaries": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/ne_10m_admin_0_boundary_lines_land.shp",
+            "geom": "line",
+            "quality": "90%"
+        },
+        "roads": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/ne_10m_roads.shp",
+            "geom": "line",
+            "quality": "70%"
+        },
+        "places": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/ne_10m_populated_places.shp",
+            "geom": "point",
+            "quality": "100%"
+        }
+    }
+}

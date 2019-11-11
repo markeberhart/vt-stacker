@@ -3,6 +3,22 @@ This application will build PBF files from unprojected (WGS84) shapefiles.
 
 # vtstacker
 
+
+examples/www/sprite
+
+sprite.json
+sprite.png
+
+
+
+examples/www/fonts
+
+FontName1,FontName2
+0-255.pbf
+256-511.pbf…
+(all in between numbers)
+65024-65279.pbf
+
 ### This application will build PBF files from unprojected (WGS84) shapefiles.
 
 ---

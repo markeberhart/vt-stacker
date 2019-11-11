@@ -19,11 +19,11 @@
     },
     "dependencies": {
         "args": "^5.0.1",
-        "geojson-vt": "https://github.com/mapbox/geojson-vt.git",
+        "finalhandler": "~1.1.2",
+        "geojson-vt": "^3.2.1",
         "mapshaper": "0.4.125",
         "open": "^6.4.0",
         "serve-static": "~1.14.1",
-        "finalhandler": "~1.1.2",
         "shelljs": "^0.8.3",
         "vt-pbf": "https://github.com/mapbox/vt-pbf.git"
     }

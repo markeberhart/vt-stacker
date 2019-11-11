@@ -1,4 +1,5 @@
 module.exports = () => {
+    console.log("VTSTACKER!!");
 
     const path          = require('path');
     const fs            = require('fs');
@@ -33,7 +34,7 @@ module.exports = () => {
         doCopyFiles:false,
         fromSystem: true,
         remdir: 'examples',
-        dir: './vtstacker-examples'
+        dir: './examples'
     }
 
 
@@ -47,11 +48,11 @@ module.exports = () => {
     // Help file example snippets
     args.examples([
         {
-            usage:'vtstacker -o ./examples/example-options.json -b -d',
+            usage:'vtstacker -o ./examples/options.json -b -d',
             description:'Will create a new series of map tiles according to the instructions provided in the JSON. The `-b` command tells vtstacker to build the map and the `-d` command says to launch (or try to launch) a development browser preview.'
         },
         {
-            usage:'vtstacker -d ./examples/www',
+            usage:'vtstacker -d ./examples/www-example',
             description:'The `-d` command instructs vtstacker to preview the provided url in the default web browser. The default port is '+ devServerObj.port +'. In this example, you would visit the site by going to http://localhost:'+ devServerObj.port +'/'
         },
         {
@@ -113,7 +114,6 @@ module.exports = () => {
             }
         }
     }
-
 
     // get bounding box that is in West, South, East, North order
     const getBBoxWSEN = () => {
@@ -408,7 +408,7 @@ module.exports = () => {
 
 
     // Parse options JSON
-    const getvtstackerOptions = () => {
+    const getVtstackerOptions = () => {
         if(!vtstackerOptions.created && hasOptions()) {
             console.log("\n vtstacker now trying to pull options from this JSON file:", flags['options']);
             console.log("\n -----------------------------------------------------");
@@ -473,7 +473,7 @@ module.exports = () => {
 
     const init = () => {
 
-        let options = getvtstackerOptions();
+        let options = getVtstackerOptions();
 
         if(options.created) {
             if(shouldBuildMap()){
