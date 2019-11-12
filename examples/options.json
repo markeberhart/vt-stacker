@@ -12,10 +12,6 @@
         "run-http-dev": "true",
         "http-dev-dir": "./examples/www"
     },
-    "example-files":{
-        "duplicate-example-files":"false",
-        "example-files-destination-dir":"./mapstacker-example-files"
-    },
     "folder-options": {
         "output-temp-files": "./examples/www/temp-files/",
         "output-pbf-files": "./examples/www/tiles/"

@@ -40,10 +40,13 @@ module.exports = () => {
 
     // Help file oparameters
     args
+    .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
+    /*
         .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
         .option('devserver', 'To be followed by the url to a directory you wish to server via HTTP. The default port is 8500.  Additionally, you can define the directory in your options JSON. If the options JSON property `run-http-dev` is set to false, then the server will not run.')
         .option('examples', 'To be followed by the url to a directory you wish to have vtstacker example files copied to.')
         .option('buildmap', 'Include this argument to build a series of map vector tiles based on your chosen options.');
+    */
 
     // Help file example snippets
     args.examples([
@@ -60,6 +63,22 @@ module.exports = () => {
             description:'The `-e` command instructs vtstacker to place a copy of the vtstacker example files to the provided directory. If no directory is provided, a new one will be created to copy the exmaple files to called `vtstacker-examples`'
         }
     ]);
+    /*
+    args.examples([
+        {
+            usage:'vtstacker -o ./examples/options.json -b -d',
+            description:'Will create a new series of map tiles according to the instructions provided in the JSON. The `-b` command tells vtstacker to build the map and the `-d` command says to launch (or try to launch) a development browser preview.'
+        },
+        {
+            usage:'vtstacker -d ./examples/www-example',
+            description:'The `-d` command instructs vtstacker to preview the provided url in the default web browser. The default port is '+ devServerObj.port +'. In this example, you would visit the site by going to http://localhost:'+ devServerObj.port +'/'
+        },
+        {
+            usage:'vtstacker -e ./examples',
+            description:'The `-e` command instructs vtstacker to place a copy of the vtstacker example files to the provided directory. If no directory is provided, a new one will be created to copy the exmaple files to called `vtstacker-examples`'
+        }
+    ]);
+    */
 
     // Container to hold passed command line parameters
     const flags = args.parse(process.argv);

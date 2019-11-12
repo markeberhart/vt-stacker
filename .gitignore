@@ -1,3 +1,4 @@
 # .gitignore 
 node_modules
-examples/www
+examples/www/temp-files
+source_index.js
