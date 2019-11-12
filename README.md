@@ -1,50 +1,12 @@
 # vt-stacker
 This application will build PBF files from unprojected (WGS84) shapefiles.
 
-# vtstacker
-
-
-examples/www/sprite
-
-sprite.json
-sprite.png
-
-
-
-examples/www/fonts
-
-FontName1,FontName2
-0-255.pbf
-256-511.pbf…
-(all in between numbers)
-65024-65279.pbf
 
 ### This application will build PBF files from unprojected (WGS84) shapefiles.
 
 ---
 
 ## Creating a MapStack
-
-
-rgs
-        .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
-        .option('devserver', 'To be followed by the url to a directory you wish to server via HTTP. The default port is 8500.  Additionally, you can define the directory in your options JSON. If the options JSON property `run-http-dev` is set to false, then the server will not run.')
-        .option('examples', 'To be followed by the url to a directory you wish to have vtstacker example files copied to.')
-        .option('buildmap', 'Include this argument to build a series of map vector tiles based on your chosen options.');
-
-    args.examples([
-        {
-            usage:'vtstacker -o ./examples/example-options.json -b -d',
-            description:'Will create a new series of map tiles according to the instructions provided in the JSON. The `-b` command tells vtstacker to build the map and the `-d` command says to launch (or try to launch) a development browser preview.'
-        },
-        {
-            usage:'vtstacker -d ./examples/www',
-            description:'The `-d` command instructs vtstacker to preview the provided url in the default web browser. The default port is '+ devServerObj.port +'. In this example, you would visit the site by going to http://localhost:'+ devServerObj.port +'/'
-        },
-        {
-            usage:'vtstacker -e ./examples',
-            description:'The `-e` command instructs vtstacker to place a copy of the vtstacker example files to the provided directory. If no directory is provided, a new one will be created to copy the exmaple files to called `vtstacker-examples`'
-        }
 
 
 Open your GitBash (or other command line interpreter) and navigate to the root of your project where you included vtstacker as a requirement.
