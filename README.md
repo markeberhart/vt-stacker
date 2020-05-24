@@ -15,9 +15,7 @@ Ensure you have run `npm install`
 
 In the command line, enter the following:
 
-npm install -g git+ssh://git@
-
---link --global-style
+npm install -g --link --global-style
 
 `vtstacker -o default -b` OR `vtstacker --options default --buildmap`
 

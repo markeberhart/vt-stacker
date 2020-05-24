@@ -1,0 +1,1 @@
+vtstacker --options ./examples/options.json --buildmap

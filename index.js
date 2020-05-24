@@ -41,12 +41,10 @@ module.exports = () => {
     // Help file oparameters
     args
     .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
-    /*
-        .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
-        .option('devserver', 'To be followed by the url to a directory you wish to server via HTTP. The default port is 8500.  Additionally, you can define the directory in your options JSON. If the options JSON property `run-http-dev` is set to false, then the server will not run.')
-        .option('examples', 'To be followed by the url to a directory you wish to have vtstacker example files copied to.')
-        .option('buildmap', 'Include this argument to build a series of map vector tiles based on your chosen options.');
-    */
+    .option('options', 'To be followed by the url to a JSON-formatted file with configuration options. (eg. --options/-o ./examples/example-options.json).')
+    .option('devserver', 'To be followed by the url to a directory you wish to server via HTTP. The default port is 8500.  Additionally, you can define the directory in your options JSON. If the options JSON property `run-http-dev` is set to false, then the server will not run.')
+    .option('examples', 'To be followed by the url to a directory you wish to have vtstacker example files copied to.')
+    .option('buildmap', 'Include this argument to build a series of map vector tiles based on your chosen options.');
 
     // Help file example snippets
     args.examples([
