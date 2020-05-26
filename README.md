@@ -29,7 +29,7 @@ Be sure to type in the location of the website you wish to serve via port 8500. 
 ````
 let devServerObj = {
     fromSystem:true,
-    port: 8500,
+    port: 8500, <-- change 8500 to a different number like 8800 or something else
     dir: null
 }
 ````
