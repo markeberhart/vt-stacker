@@ -10,7 +10,7 @@ This application will build PBF files from unprojected (WGS84) shapefiles.
 
 Open your GitBash (or other command line interpreter) and navigate to the root of your project where you included vtstacker as a requirement.
 
-Ensure you have run `npm install`
+Ensure you have run `npm install -g --link --global-style`
 
 In the command line, enter the following:
 
