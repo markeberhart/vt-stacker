@@ -111,7 +111,7 @@ Below is an example of an options JSON. You can an example here:
 
 > `run-http-dev` is a boolean (true/false) that tells vtstacker whether to launch a web preview of your map data when it has finished compiling.
 
-> `http-dev-dir` is the directory to serve to http://localhost:8000/index.html. You will want to have an `index.html` file here as well as all neccessary files. An example site (default) can be found here: `./examples/www`.
+> `http-dev-dir` is the directory to serve to via HTTP. You will want to have an `index.html` file in this directory as well as all neccessary files. An example site (default) can be found here: `./examples/www`.
 
 `folder-options` is an object to define the directory locations where vtstacker should save the PBF vector tiles.
 
