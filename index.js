@@ -383,7 +383,7 @@ module.exports = () => {
     // Decide whether to use options in command line parameter or options JSON
     const checkForExamplesRequest = () => {
         let cliDir = null;
-        // Was a durectory url passed with "examples" command via CLI?
+        // Was a directory url passed with "examples" command via CLI?
         if(flags['examples'] && typeof flags['examples']=='string'){
             cliDir = flags['examples'];
             examplesObj.dir = flags['examples'];
