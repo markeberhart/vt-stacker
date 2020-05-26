@@ -24,6 +24,16 @@ To run/test the default web service, type the following command:
 
 `vtstacker --devserver ./examples/www` OR `vtstacker -d ./examples/www` 
 
+Be sure to type in the location of the website you wish to serve via port 8500. To change the default port, you can go to the code and look for the following settings in index.js:
+
+````
+let devServerObj = {
+    fromSystem:true,
+    port: 8500,
+    dir: null
+}
+````
+
 Next, be sure to open your browser to port 8500 (default port for VT-STCKER) by going to http://localhost:8500
 
 ---
