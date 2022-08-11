@@ -1,0 +1,100 @@
+{
+    "version": 8,
+    "sprite": "",
+    "glyphs": "",
+    "sources": {
+        "mapdata": {
+            "type": "vector",
+            "tiles": [],
+            "maxzoom":2,
+            "minzoom":0
+        }
+    },
+    "light":{
+        "anchor":"viewport",
+        "color":"#ffffff",
+        "intensity":0.75
+    },
+    "layers": [
+        {
+          "id": "background",
+          "type": "background",
+          "paint": {
+              "background-color": "rgba(25, 71, 76, 1)"
+          }
+        },
+
+        {
+          "id": "layer-states",
+          "type": "fill",
+          "source": "mapdata",
+          "source-layer": "states",
+          "minzoom":0,
+          "maxzoom":14,
+          "paint": {
+              "fill-color": "rgba(187,174,124,1)",
+              "fill-outline-color":"rgba(50,50,50,0.8)"
+          }
+        },
+
+        {
+          "id": "layer-counties",
+          "type": "fill",
+          "source": "mapdata",
+          "source-layer": "counties",
+          "minzoom":0,
+          "maxzoom":14,
+          "paint": {
+              "fill-color": "rgba(187,174,124,1)"
+          }
+        },
+
+        {
+          "id": "layer-districts",
+          "type": "line",
+          "source": "mapdata",
+          "source-layer": "districts",
+          "paint": {
+              "line-color": "rgba(0, 0, 0,0.7)",
+              "line-width": 2.5,
+              "line-dasharray":[4,1]
+          }
+        },
+
+        {
+          "id": "layer-cities",
+          "type": "symbol",
+          "source": "mapdata",
+          "filter": ["all",
+            ["==", "FEATURECLA", "Admin-1 capital"]
+          ],
+          "source-layer": "places",
+          "minzoom": 2,
+          "maxzoom": 14,
+          "layout": {
+            "icon-image": "dot-10",
+            "icon-size": 1,
+            "icon-rotate": 0,
+            "icon-padding": 2,
+            "text-justify": "left",
+            "text-anchor":"left",
+            "text-padding": 5,
+            "text-rotate": 0,
+            "text-offset":[0.5,0],
+            "text-size": 11,
+            "text-field": "{NAME}",
+            "text-font": ["Metropolis Regular"],
+            "text-max-angle": 30,
+            "text-transform": "uppercase",
+            "visibility": "visible"
+          },
+          "paint": {
+            "text-color": "#000000",
+            "text-halo-color": "#fff",
+            "text-translate": [0, 0],
+            "text-halo-width": 1,
+            "text-halo-blur": 1
+          }
+        }
+    ]
+  }

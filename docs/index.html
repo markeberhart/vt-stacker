@@ -1,0 +1,167 @@
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VT-STACKER Preview</title>
+  <link rel="stylesheet" type="text/css" href="./mapbox/mapbox-gl.css">
+  <link rel="stylesheet" type="text/css" href="./mapbox/mapbox-gl-inspect.css">
+  <script src="./mapbox/mapbox-gl.js"></script>
+  <script src="./mapbox/mapbox-gl-inspect.js"></script>
+  <style>
+    body {
+      background: rgb(255, 255, 255);
+      color: #333;
+      font-family: Arial, sans-serif;
+    }
+
+    #header {
+      font-size: 1.9em;
+      font-family: Arial Narrow;
+      text-align: center;
+      color: rgb(255,255,255);
+      top: 0px;
+      width: 100%;
+      position: absolute;
+    }
+
+    #map {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    h1 {
+      position: absolute;
+      top: 5px;
+      right: 0;
+      width: 240px;
+      margin: 0;
+      line-height: 20px;
+      font-size: 20px;
+    }
+
+    #layerList {
+      position: absolute;
+      top: 35px;
+      right: 0;
+      bottom: 0;
+      width: 240px;
+      overflow: auto;
+    }
+
+    #layerList div div {
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header">mapstacker (preview)</div>
+  <div id="map" class="mapboxgl-map">
+    <div class="mapboxgl-canvas-container mapboxgl-interactive mapboxgl-touch-drag-pan mapboxgl-touch-zoom-rotate">
+      <canvas class="mapboxgl-canvas" tabindex="0" aria-label="Map" style="position: absolute; width: 1059px; height: 1152px;"
+        width="1059" height="1152"></canvas></div>
+    <div class="mapboxgl-control-container">
+      <div class="mapboxgl-ctrl-top-left"></div>
+      <div class="mapboxgl-ctrl-top-right">
+        <div class="mapboxgl-ctrl mapboxgl-ctrl-group"><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-in" type="button" aria-label="Zoom In"></button><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-zoom-out"
+            type="button" aria-label="Zoom Out"></button><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-compass" type="button"
+            aria-label="Reset North"><span class="mapboxgl-ctrl-compass-arrow" style="transform: rotate(0deg);"></span></button></div>
+        <div
+          class="mapboxgl-ctrl mapboxgl-ctrl-group" style="display: none;"><button class="mapboxgl-ctrl-icon mapboxgl-ctrl-map" type="button"></button></div>
+      </div>
+      <div class="mapboxgl-ctrl-bottom-left">
+        <div class="mapboxgl-ctrl"></div>
+      </div>
+      <div class="mapboxgl-ctrl-bottom-right">
+        <div class="mapboxgl-ctrl mapboxgl-ctrl-attrib"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function loadJson(filePath, callback, success, error){
+        //console.log("loadJson filePath:",filePath);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            //console.log("xhr.readyState:",xhr.readyState," - XMLHttpRequest.DONE:",XMLHttpRequest.DONE);
+            if (xhr.readyState === XMLHttpRequest.DONE){
+                //console.log("LOADED!");
+                if(xhr.status === 200){
+                    //console.log("status is 200 - xhr:",xhr);
+                    if(xhr.responseText){
+                        //success(JSON.parse(xhr.responseText));
+
+                        var resp = JSON.parse(xhr.responseText);
+                        //return resp;
+                        callback(resp);
+                    }else{
+                        if(error){
+                            //console.log("ERROR:",error);
+                            //return error;
+                        }
+                    }
+                }
+            }
+        }
+        xhr.open("GET", filePath, true);
+        xhr.send();
+        //console.log("XHR:",xhr);
+    }
+
+    var loc = location.pathname.replace("/index.html", "/");
+    var isHttp = true;
+
+    // If location has mapstacker, it's local and using "file://"
+    // If not, it's using "http://"
+    if(loc.includes('mapstacker')) {
+      isHttp = false;
+    }
+
+    var glyphsUrl, tilesUrl, spriteUrl, urlLoc;
+    if(isHttp) {
+      urlLoc = window.location.origin+"/";
+    } else {
+      urlLoc = "file://"+loc;
+    }
+
+    glyphsUrl   = urlLoc+"fonts/{fontstack}/{range}.pbf";
+    tilesUrl    = urlLoc+"tiles/{z}/{x}/{y}.pbf";
+    spriteUrl   = urlLoc+"sprite/sprite";
+
+    var mapstyle = "./mapbox-style.json";
+    loadJson(mapstyle, buildmap);
+
+    function buildmap(style) {
+      console.log("STYLE:", style);
+      style.sprite = spriteUrl;
+      style.glyphs = glyphsUrl;
+      style.sources.mapdata.tiles = [tilesUrl];
+      var map = new mapboxgl.Map({
+        container: 'map',
+        hash: true,
+        accessToken: false,
+        style: style,
+        minZoom:0,
+        maxZoom:14
+      });
+      map.addControl(new mapboxgl.NavigationControl());
+      var inspect = new MapboxInspect({
+        showInspectMap: true,
+        showInspectButton: false
+      });
+      map.addControl(inspect);
+    }
+
+  </script>
+
+
+</body>
+
+</html>
