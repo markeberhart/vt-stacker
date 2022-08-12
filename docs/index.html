@@ -125,15 +125,15 @@
     }
 
     var glyphsUrl, tilesUrl, spriteUrl, urlLoc;
-    if(isHttp) {
-      urlLoc = window.location.origin+"/";
-    } else {
-      urlLoc = "file://"+loc;
-    }
+    //if(isHttp) {
+      //urlLoc = window.location.origin+"/";
+    //} else {
+    urlLoc = "file://"+loc;
+    //}
 
-    glyphsUrl   = urlLoc+"fonts/{fontstack}/{range}.pbf";
-    tilesUrl    = urlLoc+"tiles/{z}/{x}/{y}.pbf";
-    spriteUrl   = urlLoc+"sprite/sprite";
+    glyphsUrl   = "https://markeberhart.github.io/vt-stacker/fonts/{fontstack}/{range}.pbf";
+    tilesUrl    = "https://markeberhart.github.io/vt-stacker/tiles/{z}/{x}/{y}.pbf";
+    spriteUrl   = "https://markeberhart.github.io/vt-stacker/sprite/sprite";
 
     var mapstyle = "./mapbox-style.json";
     loadJson(mapstyle, buildmap);
