@@ -1,11 +1,11 @@
 {
     "version": 8,
-    "sprite": "https://markeberhart.github.io/vt-stacker/sprite/sprite",
-    "glyphs": "https://markeberhart.github.io/vt-stacker/fonts/{fontstack}/{range}.pbf",
+    "sprite": "https://markeberhart.github.io/vt-stacker/docs/sprite/sprite",
+    "glyphs": "https://markeberhart.github.io/vt-stacker/docs/fonts/{fontstack}/{range}.pbf",
     "sources": {
         "mapdata": {
             "type": "vector",
-            "tiles": ["https://markeberhart.github.io/vt-stacker/tiles/{z}/{x}/{y}.pbf"],
+            "tiles": ["https://markeberhart.github.io/vt-stacker/docs/tiles/{z}/{x}/{y}.pbf"],
             "maxzoom":2,
             "minzoom":0
         }
