@@ -1,7 +1,9 @@
-x
-states(€ x
-regions(€ x
-counties(€ x
-	districts(€ x
+x
+	countries(€ x
+	us_states(€ x
+
+us_regions(€ x
+us_counties(€ x
+us_districts(€ x
 roads(€ x
 places(€ 
