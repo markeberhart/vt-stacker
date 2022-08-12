@@ -17,25 +17,31 @@
         "output-pbf-files": "./examples/www/tiles/"
     },
     "sources": {
-        "states": {
+        "countries": {
+            "sourceFileType": "shapefile",
+            "url": "./examples/shapefiles/ne_10m_admin_0_countries.shp",
+            "geom": "polygon",
+            "quality": "90%"
+        },
+        "us_states": {
             "sourceFileType": "shapefile",
             "url": "./examples/shapefiles/gis/cb_2018_us_state_500k/cb_2018_us_state_500k.shp",
             "geom": "polygon",
             "quality": "80%"
         },
-        "regions": {
+        "us_regions": {
             "sourceFileType": "shapefile",
             "url": "./examples/shapefiles/gis/cb_2018_us_region_500k/cb_2018_us_region_500k.shp",
             "geom": "polygon",
             "quality": "80%"
         },
-        "counties": {
+        "us_counties": {
             "sourceFileType": "shapefile",
             "url": "./examples/shapefiles/gis/cb_2018_us_county_500k/cb_2018_us_county_500k.shp",
             "geom": "polygon",
             "quality": "80%"
         },
-        "districts": {
+        "us_districts": {
             "sourceFileType": "shapefile",
             "url": "./examples/shapefiles/gis/cb_2018_us_cd116_20m/cb_2018_us_cd116_20m.shp",
             "geom": "line",
@@ -45,7 +51,7 @@
             "sourceFileType": "shapefile",
             "url": "./examples/shapefiles/ne_10m_roads.shp",
             "geom": "line",
-            "quality": "70%"
+            "quality": "80%"
         },
         "places": {
             "sourceFileType": "shapefile",
