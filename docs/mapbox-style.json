@@ -6,7 +6,7 @@
         "mapdata": {
             "type": "vector",
             "tiles": ["https://markeberhart.github.io/vt-stacker/docs/tiles/{z}/{x}/{y}.pbf"],
-            "maxzoom":2,
+            "maxzoom":5,
             "minzoom":0
         }
     },
