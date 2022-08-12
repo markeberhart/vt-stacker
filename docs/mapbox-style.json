@@ -56,7 +56,7 @@
           "source-layer": "districts",
           "paint": {
               "line-color": "rgba(0, 0, 0,0.7)",
-              "line-width": 2.5,
+              "line-width": 1.5,
               "line-dasharray":[4,1]
           }
         },
